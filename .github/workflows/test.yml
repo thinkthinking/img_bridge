@@ -1,0 +1,20 @@
+name: Update Labels
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  update-labels:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Update Labels
+      uses: peter-evans/update-issue-label@v2
+      with:
+        add: |
+          label1
+          label2
+        remove: |
+          label3
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
