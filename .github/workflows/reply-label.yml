@@ -1,0 +1,35 @@
+name: Reply Label
+
+on:
+  issues:
+    types: [opened, edited]
+
+jobs:
+  reply-label:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Check Last Comment
+      id: last_comment
+      uses: andymckay/github-action-last-issue-comment@v1.0.0
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Update Labels
+      uses: peter-evans/update-issue-label@v2
+      with:
+        add: |
+          replied
+        remove: |
+          to reply
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      if: steps.last_comment.outputs.comment-author == 'thinkthinking' || steps.last_comment.outputs.comment-author == 'user2' || steps.last_comment.outputs.comment-author == 'user3'
+    - name: Update Labels
+      uses: peter-evans/update-issue-label@v2
+      with:
+        add: |
+          to reply
+        remove: |
+          replied
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      if: steps.last_comment.outputs.comment-author != 'user1' && steps.last_comment.outputs.comment-author != 'user2' && steps.last_comment.outputs.comment-author != 'user3'
